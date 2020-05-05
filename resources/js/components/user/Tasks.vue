@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header text-center ">Заявки</div>
                     <div class="card-header">
-                        <button type="button" class="btn btn-primary"
+                        <button type="button" class="btn btn-success"
                                 data-toggle="modal" data-target="#exampleModal">Новая заявка</button>
                     </div>
                     <div class="card-body">
@@ -15,14 +15,25 @@
                             <tr>
                                 <th scope="col">№</th>
                                 <th scope="col">Тема</th>
-                                <th scope="col">Сообщение</th>
+                                <th scope="col">Статус</th>
+                                <th scope="col">Создан</th>
+                                <th scope="col">Обнавлен</th>
+                                <th scope="col"></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="task in tasks">
+                            <tr v-for="task in tasks" >
                                 <th scope="row">{{task.id}}</th>
-                                <td>{{task.name}}</td>
-                                <td>{{task.text}}</td>
+                                    <router-link :to="'/task/'+ task.id">
+                                        <td>{{task.name}}</td>
+                                    </router-link>
+                                <td>{{task.status == true ? 'Активен' : 'Закрыт'}}</td>
+                                <td><span>{{ task.updated_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</span></td>
+                                <td><span>{{ task.updated_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</span></td>
+                                <td>
+                                    <button v-if="task.status" type="button" class="btn btn-primary">Редактировать</button>
+                                    <button v-if="task.status" v-on:click="closeTask(task.id)"  type="button" class="btn btn-danger">Закрыть</button>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -48,7 +59,7 @@
                         <textarea v-model="newTask.text" type="text" class="form-control" placeholder="Текст..."></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button v-on:click="createTask" type="button" class="btn btn-primary" data-dismiss="modal">Создать</button>
+                        <button v-on:click="getLastTsk(user.id)" type="button" class="btn btn-primary" data-dismiss="modal">Создать</button>
                     </div>
                 </div>
             </div>
@@ -62,7 +73,12 @@
         data: () => ({
             user: {},
             tasks: {},
-            newTask: {},
+            newTask: {
+                name : '',
+                text : '',
+                user_id : '',
+            },
+            lastTask: '',
         }),
         created() {
             this.getUser();
@@ -79,7 +95,7 @@
                     });
             },
             getTasks(userId) {
-                axios.get('/user/task/'+ userId)
+                axios.get('/user/task/')
                     .then((response) => {
                         this.tasks = response.data;
                     })
@@ -92,6 +108,11 @@
 
                 axios.post('/user/task/', this.newTask)
                     .then((response) => {
+
+                        if (response.data == false) {
+                            alert('Ошибка заполнения');
+                        }
+
                         this.tasks = response.data;
                         this.newTask = {};
                         this.getTasks(this.user.id);
@@ -100,6 +121,24 @@
                         alert('Ошибка создания');
                         this.newTask = {};
                     });
+            },
+            getLastTsk(userId) {
+                axios.get('/user/task/' + userId + '/last' )
+                    .then((response) => {
+                        this.lastTask = response.data.created_at;
+                        this.createTask();
+                    });
+            },
+            closeTask(taskId) {
+                if (confirm('Вы уверены?')) {
+                    axios.delete('/user/task/' + taskId)
+                        .then((response) => {
+                            this.getTasks(this.user.id);
+                        })
+                        .catch((error) => {
+                            alert('Ошибка закрытия');
+                        });
+                }
             },
         },
     }

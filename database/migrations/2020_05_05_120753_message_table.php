@@ -16,6 +16,8 @@ class MessageTable extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->integer('task_id');
+            $table->integer('user_id')->nullable();
+            $table->integer('manager_id')->nullable();
             $table->mediumText('text');
             $table->timestamps();
         });

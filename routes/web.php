@@ -20,8 +20,12 @@ Route::prefix('user')->middleware(['isUser'])->group(function () {
     Route::get('/', 'UserController@index');
 
     Route::prefix('task')->middleware(['isUser'])->group(function () {
-        Route::get('/{userId}', 'TaskController@getAllTasksForUser');
+        Route::get('/', 'TaskController@getAllTasksForUser');
+        Route::get('/{taskId}', 'TaskController@getTaskForUser');
+        Route::post('/{taskId}/message', 'TaskController@addMessage');
+        Route::get('/{userId}/last', 'TaskController@getLastTaskOfUser');
         Route::post('/', 'TaskController@createNewTask');
+        Route::delete('/{taskId}', 'TaskController@closeTask');
     });
 });
 

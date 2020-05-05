@@ -16,7 +16,9 @@ class TaskTable extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
+            $table->integer('manager_id')->default(0);
             $table->string('name');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

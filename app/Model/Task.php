@@ -10,10 +10,18 @@ class Task extends Model
 {
     public static function getAllTasksForUser($userId)
     {
-        return Task::where('user_id', '=', $userId)
-            ->join('messages' , 'messages.task_id', 'tasks.id')
-            ->select('tasks.id', 'tasks.name','messages.text')
+        return Task::where('tasks.user_id', '=', $userId)
             ->get();
+    }
+
+    public static function getTaskForUser($taskId)
+    {
+        $task = Task::where('id', '=', $taskId)
+            ->first();
+
+        $message = Message::getMessageForTask($taskId);
+
+        return compact('task', 'message');
     }
 
     public static function createTask($data)
@@ -23,5 +31,28 @@ class Task extends Model
             'name' => $data['name'],
             'created_at' => Carbon::now(),
         ]);
+    }
+
+    public static function updateTask($taskId)
+    {
+        return Task::where('id', '=' , $taskId)
+            ->update([
+                'updated_at' => Carbon::now()
+            ]);
+    }
+
+    public static function closeTask($taskId)
+    {
+        return Task::where('id', '=' , $taskId)
+            ->update([
+                'status' => 0
+            ]);
+    }
+
+    public static function getLastTask($userId)
+    {
+        return Task::where('user_id', '=' , $userId)
+            ->orderBy('created_at', 'desc')
+            ->first();
     }
 }
