@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-header text-center ">Заявки</div>
                     <div class="card-header">
-                        <button type="button" class="btn btn-success"
+                        <button type="button" class="btn btn-success" v-on:click="editTaskId = null"
                                 data-toggle="modal" data-target="#exampleModal">Новая заявка</button>
                     </div>
                     <div class="card-body">
@@ -31,7 +31,8 @@
                                 <td><span>{{ task.updated_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</span></td>
                                 <td><span>{{ task.updated_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</span></td>
                                 <td>
-                                    <button v-if="task.status" type="button" class="btn btn-primary">Редактировать</button>
+                                    <button v-if="task.status" type="button" class="btn btn-primary" v-on:click="getTask(task.id)"
+                                            data-toggle="modal" data-target="#exampleModal">Редактировать</button>
                                     <button v-if="task.status" v-on:click="closeTask(task.id)"  type="button" class="btn btn-danger">Закрыть</button>
                                 </td>
                             </tr>
@@ -47,7 +48,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Новая заявка</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">{{ editTaskId == null ? 'Новая заявка' : 'Редактировать' }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -55,11 +56,12 @@
                     <div class="modal-body">
                         <p>Тема обращения:</p>
                         <input v-model="newTask.name" type="text" class="form-control" placeholder="Тема">
-                        <p>Сообщение:</p>
-                        <textarea v-model="newTask.text" type="text" class="form-control" placeholder="Текст..."></textarea>
+                        <p v-if="!editTaskId">Сообщение:</p>
+                        <textarea v-if="!editTaskId" v-model="newTask.text" type="text" class="form-control" placeholder="Текст..."></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button v-on:click="getLastTsk(user.id)" type="button" class="btn btn-primary" data-dismiss="modal">Создать</button>
+                        <button v-if="editTaskId" v-on:click="editTask" type="button" class="btn btn-primary" data-dismiss="modal">Редактировать</button>
+                        <button v-if="!editTaskId" v-on:click="getLastTsk(user.id)" type="button" class="btn btn-primary" data-dismiss="modal">Создать</button>
                     </div>
                 </div>
             </div>
@@ -79,9 +81,17 @@
                 user_id : '',
             },
             lastTask: '',
+            editTaskId: null,
         }),
         created() {
             this.getUser();
+        },
+        watch: {
+            editTaskId: function (val) {
+                if (val == null) {
+                    this.newTask.name = '';
+                }
+            },
         },
         methods: {
             getUser() {
@@ -143,6 +153,25 @@
                         });
                 }
             },
+            getTask(id) {
+                for (let key in this.tasks) {
+                    if (this.tasks[key].id == id) {
+                        this.editTaskId = id;
+                        this.newTask.name = this.tasks[key].name;
+                    }
+                }
+            },
+            editTask() {
+                let data = {};
+                data.name = this.newTask.name;
+                data.taskId = this.editTaskId;
+
+                axios.put('/user/task/', data)
+                    .then((response) => {
+                        this.getTasks(this.user.id);
+                    });
+
+            }
         },
     }
 </script>

@@ -52,4 +52,11 @@ class TaskController extends Controller
     {
         return Task::getLastTask($userId);
     }
+
+    public function editTask(Request $request)
+    {
+        $data = $request->all();
+
+        return Task::editTask($request['taskId'], $data);
+    }
 }

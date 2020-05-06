@@ -26,6 +26,7 @@ Route::prefix('user')->middleware(['isUser'])->group(function () {
         Route::post('/{taskId}/message', 'TaskController@addMessage');
         Route::get('/{userId}/last', 'TaskController@getDateOfLastTaskForUser');
         Route::post('/', 'TaskController@createNewTask');
+        Route::put('/', 'TaskController@editTask');
         Route::delete('/{taskId}', 'TaskController@closeTask');
     });
 });

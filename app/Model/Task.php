@@ -62,6 +62,14 @@ class Task extends Model
         } else {
             return response()->json(false);
         }
+    }
 
+    public static function editTask($taskId, $data)
+    {
+        return Task::where('id', '=', $taskId)
+            ->update([
+                'name' => $data['name'],
+                'updated_at' => Carbon::now()
+            ]);
     }
 }
