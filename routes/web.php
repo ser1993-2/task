@@ -33,4 +33,10 @@ Route::prefix('user')->middleware(['isUser'])->group(function () {
 
 Route::prefix('manager')->middleware(['isManager'])->group(function () {
     Route::get('/', 'ManagerController@index');
+
+    Route::prefix('task')->middleware(['isManager'])->group(function () {
+        Route::get('/', 'TaskController@getAllTasksForManager');
+        Route::put('/{taskId}', 'TaskController@openTask');
+        Route::delete('/{taskId}', 'TaskController@closeTask');
+    });
 });

@@ -18,6 +18,15 @@ class TaskController extends Controller
         return false;
     }
 
+    public function getAllTasksForManager()
+    {
+        if (Auth::user() && Auth::user()->role == 1) {
+            return Task::getAllTasksForManager();
+        }
+
+        return false;
+    }
+
     public function getTaskForUser(Request $request,$taskId)
     {
         return Task::getTaskForUser($taskId);
@@ -46,6 +55,11 @@ class TaskController extends Controller
     public function closeTask(Request $request,$taskId)
     {
         return Task::closeTask($taskId);
+    }
+
+    public function openTask(Request $request,$taskId)
+    {
+        return Task::openTask($taskId);
     }
 
     public function getDateOfLastTaskForUser(Request $request,$userId)

@@ -1,18 +1,19 @@
 require('./bootstrap');
 
-
+import VueMomentLib from 'vue-moment-lib';
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueAxios from 'vue-axios'
 
 import Task from './components/manager/Tasks'
 
+Vue.use(VueMomentLib);
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
 
 const router = new VueRouter({
     mode: 'hash',
-    base: '/home/',
+    base: '/manager/',
     routes: [
         { path: '/', redirect: '/task/'},
 

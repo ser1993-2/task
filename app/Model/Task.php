@@ -14,6 +14,15 @@ class Task extends Model
             ->get();
     }
 
+    public static function getAllTasksForManager()
+    {
+        return Task::join('users', 'users.id', 'tasks.user_id')
+            ->select('tasks.id', 'tasks.name', 'tasks.created_at', 'tasks.updated_at', 'tasks.status',
+                'tasks.view', 'users.name as user_name' )
+            ->orderBy('id', 'desc')
+            ->get();
+    }
+
     public static function getTaskForUser($taskId)
     {
         $task = Task::where('id', '=', $taskId)
@@ -49,11 +58,23 @@ class Task extends Model
             ]);
     }
 
+    public static function openTask($taskId)
+    {
+        return Task::where('id', '=' , $taskId)
+            ->update([
+                'status' => 1
+            ]);
+    }
+
     public static function getLastTask($userId)
     {
         $task = Task::where('user_id', '=' , $userId)
             ->orderBy('created_at', 'desc')
             ->first();
+
+        if (!$task) {
+            return response()->json(true);
+        }
 
         $date = (int) Carbon::now()->hour - (int) $task->created_at->format('H');
 

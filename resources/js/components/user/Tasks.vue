@@ -28,7 +28,7 @@
                                         <td>{{task.name}}</td>
                                     </router-link>
                                 <td>{{task.status == true ? 'Активен' : 'Закрыт'}}</td>
-                                <td><span>{{ task.updated_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</span></td>
+                                <td><span>{{ task.created_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</span></td>
                                 <td><span>{{ task.updated_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</span></td>
                                 <td>
                                     <button v-if="task.status" type="button" class="btn btn-primary" v-on:click="getTask(task.id)"

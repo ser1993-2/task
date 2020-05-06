@@ -19,6 +19,7 @@ class TaskTable extends Migration
             $table->integer('manager_id')->default(0);
             $table->string('name');
             $table->boolean('status')->default(1);
+            $table->boolean('view')->default(0);
             $table->timestamps();
         });
     }
