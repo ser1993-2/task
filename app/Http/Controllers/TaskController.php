@@ -48,7 +48,7 @@ class TaskController extends Controller
         return Task::closeTask($taskId);
     }
 
-    public function getLastTaskOfUser(Request $request,$userId)
+    public function getDateOfLastTaskForUser(Request $request,$userId)
     {
         return Task::getLastTask($userId);
     }

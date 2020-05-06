@@ -14,6 +14,7 @@ Route::get('/', function () {
 
 Route::prefix('/account')->middleware(['auth'])->group(function () {
     Route::get('/', 'AccountController@getUser');
+    Route::post('/message/{messageId}/file', 'AccountController@storeFile');
 });
 
 Route::prefix('user')->middleware(['isUser'])->group(function () {
@@ -23,7 +24,7 @@ Route::prefix('user')->middleware(['isUser'])->group(function () {
         Route::get('/', 'TaskController@getAllTasksForUser');
         Route::get('/{taskId}', 'TaskController@getTaskForUser');
         Route::post('/{taskId}/message', 'TaskController@addMessage');
-        Route::get('/{userId}/last', 'TaskController@getLastTaskOfUser');
+        Route::get('/{userId}/last', 'TaskController@getDateOfLastTaskForUser');
         Route::post('/', 'TaskController@createNewTask');
         Route::delete('/{taskId}', 'TaskController@closeTask');
     });

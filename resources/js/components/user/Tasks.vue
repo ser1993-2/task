@@ -125,8 +125,11 @@
             getLastTsk(userId) {
                 axios.get('/user/task/' + userId + '/last' )
                     .then((response) => {
-                        this.lastTask = response.data.created_at;
-                        this.createTask();
+                        if (response.data) {
+                            this.createTask();
+                        } else {
+                            alert('Не чаще одного обращения в сутки');
+                        }
                     });
             },
             closeTask(taskId) {

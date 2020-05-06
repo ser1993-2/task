@@ -9,7 +9,7 @@ class Message extends Model
 {
     public static function createMessage($taskId,$data)
     {
-         Message::insert([
+         $messageId = Message::insertGetId([
             'task_id' => $taskId,
             'text' => $data['text'],
             'user_id' => $data['user_id'] ?? 0,
@@ -19,12 +19,16 @@ class Message extends Model
 
          Task::updateTask($taskId);
 
-        return true;
+        return $messageId;
     }
 
     public static function getMessageForTask($taskId)
     {
         return Message::where('task_id', '=', $taskId)
+            ->leftJoin('files', 'files.message_id', 'messages.id')
+            ->select('messages.id','messages.text', 'messages.created_at','messages.user_id',
+                'messages.manager_id', 'files.path')
+            ->orderBy('messages.id')
             ->get();
     }
 }

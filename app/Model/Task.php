@@ -51,8 +51,17 @@ class Task extends Model
 
     public static function getLastTask($userId)
     {
-        return Task::where('user_id', '=' , $userId)
+        $task = Task::where('user_id', '=' , $userId)
             ->orderBy('created_at', 'desc')
             ->first();
+
+        $date = (int) Carbon::now()->hour - (int) $task->created_at->format('H');
+
+        if ($date >=  0) {
+            return response()->json(true);
+        } else {
+            return response()->json(false);
+        }
+
     }
 }

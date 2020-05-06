@@ -15,11 +15,13 @@
                         <h3 class="text-center">{{ task.name }}</h3>
                         <div v-for="item in message" class="alert" role="alert"
                         :class="{'alert-info' : item.user_id ,'alert-warning' : item.manager_id  }">
-                            <p class="text-date">{{ user.name }} | {{ task.updated_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</p>
+                            <p class="text-date">{{ user.name }} | {{ item.created_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</p>
                             {{ item.text }}
+                            <p><a :href="item.path" v-if="item.path" target="_blank">Прикрепленный файл</a></p>
                         </div>
 
                         <div class="alert alert-dark" role="alert" v-if="task.status">
+                            <input  @change="loadFile" type="file">
                             <input v-model="newText" type="text" class="form-control" placeholder="Сообщение">
                             <button v-on:click="sendMessage" type="button" class="btn btn-success" style="margin-top: 5px">Отправить</button>
                         </div>
@@ -39,6 +41,7 @@
             task: {},
             message: {},
             newText: '',
+            dataFile: null,
         }),
         created() {
             this.getUser();
@@ -78,6 +81,13 @@
 
                 axios.post('/user/task/' + this.taskId + '/message', data)
                     .then((response) => {
+                        let messageId = response.data;
+
+                        if (this.dataFile) {
+                            this.storeFile(messageId);
+                            return;
+                        }
+
                         this.newText = '';
                         this.getTask();
                     })
@@ -85,6 +95,30 @@
                         alert('Ошибка');
                     });
             },
+
+            loadFile(e) {
+                let files = e.target.files;
+                this.dataFile = null;
+
+                if (!files.length) {
+                    return;
+                }
+
+                this.dataFile = new FormData();
+                this.dataFile.append('file', files[0]);
+            },
+            storeFile(messageId) {
+
+                axios.post('/account/message/' + messageId + '/file', this.dataFile)
+                    .then(function (response) {
+                        this.newText = '';
+                        this.getTask();
+                    })
+                    .catch((error) => {
+                        this.newText = '';
+                        this.getTask();
+                    });
+            }
         },
     }
 </script>
