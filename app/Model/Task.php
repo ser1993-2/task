@@ -82,13 +82,16 @@ class Task extends Model
             return response()->json(true);
         }
 
-        $date = (int) Carbon::now()->hour - (int) $task->created_at->format('H');
+        $now = Carbon::now();
+        $last = Carbon::parse($task->created_at);
+        $result = $now->diffInHours($last);
 
-        if ($date >=  0) {
+        if ($result >= 24) {
             return response()->json(true);
         } else {
             return response()->json(false);
         }
+
     }
 
     public static function editTask($taskId, $data)

@@ -26,8 +26,8 @@
                                 <label class="form-check-label" for="exampleCheck4">Просмотрен:</label>
                             </div>
                             <div class="col-md-2">
-                                <input v-on:click="addFieldSort('answer')" type="checkbox" class="form-check-input" id="exampleCheck4">
-                                <label class="form-check-label" for="exampleCheck4">Отвечен:</label>
+                                <input v-on:click="addFieldSort('answer')" type="checkbox" class="form-check-input" id="exampleCheck5">
+                                <label class="form-check-label" for="exampleCheck5">Отвечен:</label>
                             </div>
                         </div>
                     </div>

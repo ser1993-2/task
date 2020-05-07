@@ -3,8 +3,10 @@
 namespace App\Model;
 
 use App\Http\Controllers\AccountController;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Message extends Model
 {

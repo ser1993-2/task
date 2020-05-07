@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Message;
 use App\Model\Task;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,6 +54,7 @@ class TaskController extends Controller
 
         $taskId = Task::createTask($data);
         Message::createMessage($taskId,$data);
+        User::sendNewTask($taskId);
         return true;
     }
 
@@ -60,6 +62,13 @@ class TaskController extends Controller
     {
         $data = $request->all();
         Message::createMessage($taskId,$data);
+
+        if (Auth::user()->role == 1) {
+            $userId = Task::find($taskId)->pluck('user_id');
+            User::sendNewMessageForUser($taskId,$data['text'],$userId);
+        } else {
+            User::sendNewMessageForManager($taskId,$data['text']);
+        }
     }
 
     public function closeTask(Request $request,$taskId)

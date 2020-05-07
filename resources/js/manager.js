@@ -16,7 +16,7 @@ const router = new VueRouter({
     mode: 'hash',
     base: '/manager/',
     routes: [
-        { path: '/', redirect: '/tasks/'},
+        { path: '/', redirect: '/task/'},
 
         { path: '/task/', component: Tasks},
         { path: '/task/:id', component: Task},
