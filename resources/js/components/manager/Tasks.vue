@@ -14,12 +14,20 @@
                                 <label class="form-check-label" for="exampleCheck1">Номер заявки:</label>
                             </div>
                             <div class="col-md-2">
-                                <input v-on:click="addFieldSort('name')"type="checkbox" class="form-check-input" id="exampleCheck2">
+                                <input v-on:click="addFieldSort('name')" type="checkbox" class="form-check-input" id="exampleCheck2">
                                 <label class="form-check-label" for="exampleCheck2">Имя пользователя:</label>
                             </div>
                             <div class="col-md-2">
-                                <input v-on:click="addFieldSort('status')"type="checkbox" class="form-check-input" id="exampleCheck3">
+                                <input v-on:click="addFieldSort('status')" type="checkbox" class="form-check-input" id="exampleCheck3">
                                 <label class="form-check-label" for="exampleCheck3">Статус:</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input v-on:click="addFieldSort('view')" type="checkbox" class="form-check-input" id="exampleCheck4">
+                                <label class="form-check-label" for="exampleCheck4">Просмотрен:</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input v-on:click="addFieldSort('answer')" type="checkbox" class="form-check-input" id="exampleCheck4">
+                                <label class="form-check-label" for="exampleCheck4">Отвечен:</label>
                             </div>
                         </div>
                     </div>
@@ -33,6 +41,7 @@
                                 <th scope="col">Статус</th>
                                 <th scope="col">Пользватель</th>
                                 <th scope="col">Просмотрен</th>
+                                <th scope="col">Дан ответ</th>
                                 <th scope="col">Создан</th>
                                 <th scope="col">Обнавлен</th>
                                 <th scope="col"></th>
@@ -47,7 +56,7 @@
                                 <td>{{ task.status == true ? 'Активен' : 'Закрыт'}}</td>
                                 <td>{{ task.user_name }}</td>
                                 <td>{{ task.view == true ? '   Да' : 'Нет'}}</td>
-
+                                <td>{{ task.answer == true ? '   Да' : 'Нет'}}</td>
                                 <td><span>{{ task.created_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</span></td>
                                 <td><span>{{ task.updated_at | moment().format('YYYY-MM-DD hh:mm:ss') }}</span></td>
                                 <td>

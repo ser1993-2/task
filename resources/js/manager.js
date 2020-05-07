@@ -5,7 +5,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueAxios from 'vue-axios'
 
-import Task from './components/manager/Tasks'
+import Tasks from './components/manager/Tasks'
+import Task from './components/manager/Task'
 
 Vue.use(VueMomentLib);
 Vue.use(VueRouter);
@@ -15,9 +16,10 @@ const router = new VueRouter({
     mode: 'hash',
     base: '/manager/',
     routes: [
-        { path: '/', redirect: '/task/'},
+        { path: '/', redirect: '/tasks/'},
 
-        { path: '/task/', component: Task},
+        { path: '/task/', component: Tasks},
+        { path: '/task/:id', component: Task},
 
     ]
 });

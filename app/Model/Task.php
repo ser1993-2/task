@@ -16,14 +16,20 @@ class Task extends Model
 
     public static function getAllTasksForManager()
     {
-        return Task::join('users', 'users.id', 'tasks.user_id')
+        $tasks =  Task::join('users', 'users.id', 'tasks.user_id')
             ->select('tasks.id', 'tasks.name', 'tasks.created_at', 'tasks.updated_at', 'tasks.status',
                 'tasks.view', 'users.name as user_name' )
             ->orderBy('id', 'desc')
             ->get();
+
+        foreach ($tasks as $task) {
+            $task->answer = Message::getLastAnswer($task->id);
+        }
+
+        return $tasks;
     }
 
-    public static function getTaskForUser($taskId)
+    public static function getTask($taskId)
     {
         $task = Task::where('id', '=', $taskId)
             ->first();
@@ -91,6 +97,14 @@ class Task extends Model
             ->update([
                 'name' => $data['name'],
                 'updated_at' => Carbon::now()
+            ]);
+    }
+
+    public static function updateView($taskId)
+    {
+        return Task::where('id', '=', $taskId)
+            ->update([
+                'view' => 1
             ]);
     }
 }

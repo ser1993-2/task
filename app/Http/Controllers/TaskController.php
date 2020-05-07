@@ -27,9 +27,20 @@ class TaskController extends Controller
         return false;
     }
 
-    public function getTaskForUser(Request $request,$taskId)
+    public function getTask(Request $request,$taskId)
     {
-        return Task::getTaskForUser($taskId);
+        return Task::getTask($taskId);
+    }
+
+    public function getTaskForManager(Request $request,$taskId)
+    {
+        $task = Task::getTask($taskId);
+
+        if ($task) {
+            Task::updateView($taskId);
+        }
+
+        return $task;
     }
 
     public function createNewTask(Request $request)
@@ -48,8 +59,7 @@ class TaskController extends Controller
     public function addMessage(Request $request,$taskId)
     {
         $data = $request->all();
-
-        return Message::createMessage($taskId,$data);
+        Message::createMessage($taskId,$data);
     }
 
     public function closeTask(Request $request,$taskId)

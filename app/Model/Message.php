@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Http\Controllers\AccountController;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,5 +31,13 @@ class Message extends Model
                 'messages.manager_id', 'files.path')
             ->orderBy('messages.id')
             ->get();
+    }
+
+    public static function getLastAnswer($taskId)
+    {
+        return Message::where('task_id', '=', $taskId)
+            ->orderBy('messages.id', 'desc')
+            ->pluck('manager_id')
+            ->first();
     }
 }

@@ -22,7 +22,7 @@ Route::prefix('user')->middleware(['isUser'])->group(function () {
 
     Route::prefix('task')->middleware(['isUser'])->group(function () {
         Route::get('/', 'TaskController@getAllTasksForUser');
-        Route::get('/{taskId}', 'TaskController@getTaskForUser');
+        Route::get('/{taskId}', 'TaskController@getTask');
         Route::post('/{taskId}/message', 'TaskController@addMessage');
         Route::get('/{userId}/last', 'TaskController@getDateOfLastTaskForUser');
         Route::post('/', 'TaskController@createNewTask');
@@ -36,6 +36,8 @@ Route::prefix('manager')->middleware(['isManager'])->group(function () {
 
     Route::prefix('task')->middleware(['isManager'])->group(function () {
         Route::get('/', 'TaskController@getAllTasksForManager');
+        Route::get('/{taskId}', 'TaskController@getTaskForManager');
+        Route::post('/{taskId}/message', 'TaskController@addMessage');
         Route::put('/{taskId}', 'TaskController@openTask');
         Route::delete('/{taskId}', 'TaskController@closeTask');
     });
